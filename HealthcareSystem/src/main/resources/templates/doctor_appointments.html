@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Doctor's Appointments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Patient Appointments</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment : ${appointments}">
+            <td th:text="${appointment.patient.email}"></td>
+            <td th:text="${appointment.appointmentDate}"></td>
+            <td th:text="${appointment.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/doctor/home" class="btn btn-secondary">Back</a>
+</div>
+</body>
+</html>

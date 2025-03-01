@@ -4,7 +4,7 @@
     <module name="HealthcareSystem" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.anudip.HealthcareSystem.*" />
+        <option name="PATTERN" value="com.anudip.HealthcareSystem.model.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

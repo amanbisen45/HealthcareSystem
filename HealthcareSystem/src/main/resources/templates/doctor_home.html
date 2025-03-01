@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Doctor Home</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Welcome, Doctor</h1>
+  <p>You can manage your appointments and check patient details here.</p>
+
+  <div class="mt-4">
+    <a href="/doctor/appointments" class="btn btn-primary">View Appointments</a>
+    <form th:action="@{/logout}" method="post" class="text-center mt-4">
+      <input type="submit" class="btn btn-danger" value="Logout" />
+    </form>
+  </div>
+</div>
+</body>
+</html>

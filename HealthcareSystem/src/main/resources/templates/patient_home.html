@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Patient Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+</head>
+<body>
+
+<div class="container mt-5">
+  <h1 class="text-center">Welcome to Patient Dashboard</h1>
+
+  <div class="text-center mt-4">
+    <a href="/appointments" class="btn btn-primary">View Appointments</a>
+    <a href="/appointments/book" class="btn btn-success">Book Appointment</a>
+    <a href="/profile" class="btn btn-secondary">View Profile</a>
+  </div>
+
+  <form th:action="@{/logout}" method="post" class="text-center mt-4">
+    <input type="submit" class="btn btn-danger" value="Logout" />
+  </form>
+</div>
+
+</body>
+</html>
