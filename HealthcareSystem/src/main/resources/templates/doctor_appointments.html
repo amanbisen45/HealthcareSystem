@@ -8,12 +8,14 @@
 <body>
 <div class="container mt-5">
     <h1>Patient Appointments</h1>
+
     <table class="table">
         <thead>
         <tr>
             <th>Patient</th>
             <th>Date</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -21,6 +23,19 @@
             <td th:text="${appointment.patient.email}"></td>
             <td th:text="${appointment.appointmentDate}"></td>
             <td th:text="${appointment.status}"></td>
+            <td>
+                <!-- Show buttons only if status is PENDING -->
+            <td>
+                <form th:action="@{/doctor/update-appointment}" method="post" th:if="${appointment.status.toString() == 'PENDING'}">
+                    <input type="hidden" name="appointmentId" th:value="${appointment.id}" />
+
+                    <button type="submit" name="status" value="ACCEPTED" class="btn btn-success btn-sm">Accept</button>
+                    <button type="submit" name="status" value="REJECTED" class="btn btn-danger btn-sm">Reject</button>
+                </form>
+            </td>
+
+
+            </td>
         </tr>
         </tbody>
     </table>

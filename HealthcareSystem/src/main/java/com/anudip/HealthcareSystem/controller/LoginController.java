@@ -24,20 +24,21 @@ public class LoginController {
         return "index"; // This looks for index.html inside src/main/resources/templates/
     }
 
-    @GetMapping("/user/status")
-    public Map<String, Object> getUserStatus(@SessionAttribute(name = "userRole", required = false) String userRole) {
-        Map<String, Object> response = new HashMap<>();
-        if (userRole == null) {
-            response.put("loggedIn", false);
-        } else {
-            response.put("loggedIn", true);
-            response.put("role", userRole);
-        }
-        return response;
-    }
+//    @GetMapping("/user/status")
+//    public Map<String, Object> getUserStatus(@SessionAttribute(name = "userRole", required = false) String userRole) {
+//        Map<String, Object> response = new HashMap<>();
+//        if (userRole == null) {
+//            response.put("loggedIn", false);
+//        } else {
+//            response.put("loggedIn", true);
+//            response.put("role", userRole);
+//        }
+//        return response;
+//    }
 
 
 
+    //Login Page using ModelAndView
     @GetMapping("/login")
     public ModelAndView login() {
         ModelAndView mav = new ModelAndView("login");
@@ -45,6 +46,7 @@ public class LoginController {
         return mav;
     }
 
+    //Login after validating email & password based on Role (Patient/Doctor)
     @PostMapping("/login")
     public String login(@ModelAttribute("user") User user, HttpServletRequest request) {
         User oauthUser = userService.login(user.getEmail(), user.getPassword());

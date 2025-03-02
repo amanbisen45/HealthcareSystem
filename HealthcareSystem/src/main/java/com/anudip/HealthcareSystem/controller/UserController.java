@@ -14,14 +14,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Show Registration Page
+    // Show Registration Page (LoginPage is handled by Login Controller)
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
-    // Handle Registration Form Submission
+    //Registration Form Submission
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user, Model model) {
         boolean isRegistered = userService.registerUser(user);

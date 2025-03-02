@@ -26,11 +26,22 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
     }
 
+    public Appointment getAppointmentById(Long id) {
+        return appointmentRepository.findById(id).orElse(null);
+    }
+
     public void saveAppointment(Appointment appointment) {
         appointmentRepository.save(appointment);
     }
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
+    }
+
+    public boolean existsByPatientIdAndDoctorIdAndStatus(Long patientId, Long doctorId) {
+        return appointmentRepository.existsByPatientIdAndDoctorIdAndStatusIn(
+                patientId, doctorId, List.of(Status.PENDING, Status.APPROVED)
+        );
+
     }
 }

@@ -1,21 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="ISO-8859-1">
+  <meta charset="UTF-8">
   <title>Doctor Home</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+        background: linear-gradient(to right, #0072ff, #00c6ff);
+        color: white;
+        font-family: 'Arial', sans-serif;
+    }
+    .card {
+        background: white;
+        color: black;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+    .btn-custom {
+        background-color: #0072ff;
+        color: white;
+    }
+    .btn-custom:hover {
+        background-color: #005ecb;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+    }
+  </style>
 </head>
 <body>
-<div class="container mt-5">
-  <h1>Welcome, Doctor</h1>
-  <p>You can manage your appointments and check patient details here.</p>
 
-  <div class="mt-4">
-    <a href="/doctor/appointments" class="btn btn-primary">View Appointments</a>
-    <form th:action="@{/logout}" method="post" class="text-center mt-4">
-      <input type="submit" class="btn btn-danger" value="Logout" />
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="card col-md-6">
+    <h1 class="mb-3">👨‍⚕️ Welcome, Doctor</h1>
+    <p>You can manage your appointments and check patient details here.</p>
+
+    <div class="d-grid gap-3">
+      <a href="/doctor/appointments" class="btn btn-primary">📋 View Appointments</a>
+      <a href="/profile" class="btn btn-success">👤 View Profile</a>
+    </div>
+
+    <form th:action="@{/logout}" method="post" class="mt-4">
+      <button type="submit" class="btn btn-danger">🚪 Logout</button>
     </form>
   </div>
 </div>
+
 </body>
 </html>

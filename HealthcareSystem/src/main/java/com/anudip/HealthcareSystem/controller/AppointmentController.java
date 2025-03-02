@@ -22,7 +22,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    // 📌 Show Patient's Appointments
+    //Show Patient's Appointments
     @GetMapping("/appointments")
     public ModelAndView patientAppointments(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -41,7 +41,7 @@ public class AppointmentController {
         return mav;
     }
 
-    // 📌 Show Doctor's Appointments
+    //Show Doctor's Appointments
     @GetMapping("/doctor/appointments")
     public ModelAndView doctorAppointments(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
