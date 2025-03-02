@@ -1,6 +1,7 @@
 package com.anudip.HealthcareSystem.service;
 
 import com.anudip.HealthcareSystem.model.Appointment;
+import com.anudip.HealthcareSystem.model.Status;
 import com.anudip.HealthcareSystem.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,15 @@ public class AppointmentService {
     }
 
     public void bookAppointment(Appointment appointment) {
-        appointment.setStatus("Pending");
+        appointment.setStatus(Status.PENDING);
         appointmentRepository.save(appointment);
+    }
+
+    public void saveAppointment(Appointment appointment) {
+        appointmentRepository.save(appointment);
+    }
+
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
     }
 }

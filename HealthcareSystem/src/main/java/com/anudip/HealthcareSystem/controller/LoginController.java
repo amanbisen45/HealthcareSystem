@@ -1,5 +1,7 @@
 package com.anudip.HealthcareSystem.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import com.anudip.HealthcareSystem.model.User;
@@ -8,11 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -20,6 +18,25 @@ public class LoginController {
 
     @Autowired
     private LoginService userService;
+
+    @GetMapping("/")
+    public String home() {
+        return "index"; // This looks for index.html inside src/main/resources/templates/
+    }
+
+    @GetMapping("/user/status")
+    public Map<String, Object> getUserStatus(@SessionAttribute(name = "userRole", required = false) String userRole) {
+        Map<String, Object> response = new HashMap<>();
+        if (userRole == null) {
+            response.put("loggedIn", false);
+        } else {
+            response.put("loggedIn", true);
+            response.put("role", userRole);
+        }
+        return response;
+    }
+
+
 
     @GetMapping("/login")
     public ModelAndView login() {

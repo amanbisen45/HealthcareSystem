@@ -2,6 +2,7 @@ package com.anudip.HealthcareSystem.controller;
 
 import com.anudip.HealthcareSystem.model.Appointment;
 import com.anudip.HealthcareSystem.model.Role;
+import com.anudip.HealthcareSystem.model.Status;
 import com.anudip.HealthcareSystem.model.User;
 import com.anudip.HealthcareSystem.service.AppointmentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,24 +58,5 @@ public class AppointmentController {
         ModelAndView mav = new ModelAndView("doctor_appointments");
         mav.addObject("appointments", appointments);
         return mav;
-    }
-
-    // 📌 Book Appointment (Patient)
-    @PostMapping("/appointments/book")
-    public String bookAppointment(HttpServletRequest request, @ModelAttribute Appointment appointment) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loggedInUser") == null) {
-            return "redirect:/login";
-        }
-
-        User user = (User) session.getAttribute("loggedInUser");
-        if (user.getRole() != Role.PATIENT) {
-            return "redirect:/login";
-        }
-
-        appointment.setPatient(user);
-        appointment.setStatus("Pending");
-        appointmentService.bookAppointment(appointment);
-        return "redirect:/appointments";
     }
 }

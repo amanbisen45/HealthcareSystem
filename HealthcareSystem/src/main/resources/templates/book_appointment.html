@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Book Appointment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center">Book an Appointment</h2>
+
+    <form th:action="@{/patient/book-appointment}" method="post">
+        <div class="form-group">
+            <label for="doctor">Select Doctor:</label>
+            <select name="doctorId" id="doctor" class="form-control">
+                <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.email}"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Book Appointment</button>
+    </form>
+
+    <a href="/patient/home" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+
+</body>
+</html>
