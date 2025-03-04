@@ -3,125 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | E-Healthcare</title>
+    <title>Home | Smart E-Healthcare</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white !important;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #0e8ed0 !important;
+        }
+        .navbar-brand img {
+            height: 70px;
+            width: 70px;
+            margin-right: 10px;
+        }
+        .nav-item a {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        .nav-item a:hover {
+            color: #0e8ed0;
+        }
+
+        /* Hero Section */
         .hero-section {
             background: url('/images/Healthcare.jpg') no-repeat center center/cover;
-            height: 80vh;
-            color: white;
+            height: 90vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-        }
-        .hero-section h1 {
-            font-size: 3rem;
-            font-weight: bold;
-        }
-        .hero-section p {
-            font-size: 1.2rem;
-        }
-        .footer {
-            background-color: #343a40;
+            text-align: left;
             color: white;
-            padding: 15px 0;
-            text-align: center;
+            position: relative;
+            padding: 0 5%;
         }
-        img{
-            height: 250px;
-            width: 250px;
-
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
         }
 
+        /* Buttons */
+        .btn-primary {
+            background: #0e8ed0;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-primary:hover {
+            background: #08699d;
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            color: white;
+            transition: all 0.3s ease-in-out;
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: #0e8ed0;
+        }
+
+        /* Login & Logout */
+        .btn-outline-primary {
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
 
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">E-Healthcare</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Doctors</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Appointments</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-            <li class="nav-item">
-                <form action="/logout" method="post" class="d-inline">
-                    <input type="submit" class="btn btn-outline-info ml-2" value="Logout">
-                </form>
-            </li>
-        </ul>
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="/images/logo.png" alt="E-Healthcare">
+            E-Healthcare
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+                <li class="nav-item">
+                    <a href="/login" id="login-btn" class="btn btn-outline-primary">Login</a>
+                    <button id="logout-btn" class="btn btn-outline-primary" style="display: none;" onclick="logoutUser()">Logout</button>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
-<!-- Hero Section -->
 <div class="hero-section">
-    <div class="container">
-        <h1>Welcome to E-Healthcare</h1>
-        <p>Book appointments, access medical records, and connect with top doctors.</p>
-        <a href="#" class="btn btn-primary btn-lg" onclick="redirectUser()">Get Started</a>
+    <div class="hero-content">
+        <h1>Healthcare at Your Fingertips</h1>
+        <p>Book appointments, manage medical records, and connect with top doctors with ease.</p>
+        <a href="#" id="start-btn" class="btn btn-primary">Get Started</a>
+        <a href="#" class="btn btn-secondary">Learn More</a>
     </div>
 </div>
 
-<!-- Services Section -->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <img src="/images/doctor.jpg" class="rounded-circle" alt="Doctors">
-            <h3>Find a Doctor</h3>
-            <p>Search for highly qualified medical professionals.</p>
-        </div>
-        <div class="col-md-4 text-center">
-            <img src="/images/hospital.png" class="rounded-circle" alt="Appointments">
-            <h3>Book Appointments</h3>
-            <p>Schedule appointments with doctors online.</p>
-        </div>
-        <div class="col-md-4 text-center">
-            <img src="/images/medicine.jpg" class="rounded-circle" alt="Records">
-            <h3>Medical Records</h3>
-            <p>Access your health records securely.</p>
-        </div>
-    </div>
-</div>
-
-<!-- Footer -->
-<div class="footer mt-5">
-    <p>&copy; 2025 E-Healthcare. All Rights Reserved.</p>
-</div>
-
-<!-- Bootstrap Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!-- JavaScript Logic -->
 <script>
-    function redirectUser() {
-        fetch('/user/status')
-            .then(response => response.json())
-            .then(data => {
-                if (data.loggedIn) {
-                    if (data.role === 'PATIENT') {
-                        window.location.href = "/patient_home";
-                    } else if (data.role === 'DOCTOR') {
-                        window.location.href = "/doctor_home";
-                    } else {
-                        window.location.href = "/login";  // Default case
-                    }
-                } else {
+    async function checkUserStatus() {
+        try {
+            const response = await fetch('/user/status');
+            const data = await response.json();
+
+            const startButton = document.getElementById("start-btn");
+
+            if (data.loggedIn) {
+                document.getElementById("logout-btn").style.display = "inline-block";
+                document.getElementById("login-btn").style.display = "none";
+
+                startButton.textContent = "Explore";
+                startButton.onclick = function() {
+                    window.location.href = data.role === 'ADMIN' ? "/admin/dashboard" :
+                                           data.role === 'PATIENT' ? "/patient/home" : "/doctor/home";
+                };
+            } else {
+                document.getElementById("logout-btn").style.display = "none";
+                document.getElementById("login-btn").style.display = "inline-block";
+
+                startButton.textContent = "Get Started";
+                startButton.onclick = function() {
                     window.location.href = "/login";
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching user status:", error);
-                window.location.href = "/login"; // Default fallback
-            });
+                };
+            }
+        } catch (error) {
+            console.error("Error fetching user status:", error);
+        }
     }
+
+    async function logoutUser() {
+        try {
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = "/";
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", checkUserStatus);
 </script>
 
 </body>

@@ -26,6 +26,12 @@ public class UserService {
         userRepository.save(user);
         return true; // Successfully registered
     }
+    
+    //Find user by email
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
     //Get all doctors from the database
     public List<User> getAllDoctors() {
         return userRepository.findByRole(Role.DOCTOR);

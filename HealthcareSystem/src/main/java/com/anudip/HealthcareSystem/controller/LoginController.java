@@ -24,19 +24,6 @@ public class LoginController {
         return "index"; // This looks for index.html inside src/main/resources/templates/
     }
 
-//    @GetMapping("/user/status")
-//    public Map<String, Object> getUserStatus(@SessionAttribute(name = "userRole", required = false) String userRole) {
-//        Map<String, Object> response = new HashMap<>();
-//        if (userRole == null) {
-//            response.put("loggedIn", false);
-//        } else {
-//            response.put("loggedIn", true);
-//            response.put("role", userRole);
-//        }
-//        return response;
-//    }
-
-
 
     //Login Page using ModelAndView
     @GetMapping("/login")
@@ -75,4 +62,24 @@ public class LoginController {
         request.getSession().invalidate();  // Destroy session on logout
         return "redirect:/login";
     }
+
+    @GetMapping("/user/status")
+    @ResponseBody
+    public Map<String, Object> getUserStatus(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Map<String, Object> response = new HashMap<>();
+
+        if (session != null) {
+            User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+            if (loggedInUser != null) {
+                response.put("loggedIn", true);
+                response.put("role", loggedInUser.getRole().toString());
+                return response;
+            }
+        }
+        response.put("loggedIn", false);
+        return response;
+    }
+
 }
