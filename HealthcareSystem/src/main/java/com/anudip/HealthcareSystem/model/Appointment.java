@@ -1,10 +1,14 @@
 package com.anudip.HealthcareSystem.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
-@Table(name = "appointment")
+@Table(name = "appointment", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"doctor_id", "appointmentDate", "timeSlot"})
+})
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +21,10 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private User doctor;  // Doctor assigned to the appointment
+
+    @Column(nullable = false)
+    private LocalTime timeSlot;
+
 
     private LocalDateTime appointmentDate;
 
@@ -48,5 +56,8 @@ public class Appointment {
 
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
+
+    public LocalTime getTimeSlot() { return timeSlot; }
+    public void setTimeSlot(LocalTime timeSlot) { this.timeSlot = timeSlot; }
 }
 

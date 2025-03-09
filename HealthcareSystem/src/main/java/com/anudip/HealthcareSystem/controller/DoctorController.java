@@ -23,18 +23,22 @@ public class DoctorController {
     //Show Doctor Dashboard if He is logged In
     @GetMapping("/doctor/home")
     public ModelAndView doctorHome(HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // Get existing session (don't create new one)
+        // Get existing session (don't create new one)
+        HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loggedInUser") == null) {
-            return new ModelAndView("redirect:/login"); // Redirect if not logged in
+            // Redirect if not logged in
+            return new ModelAndView("redirect:/login");
         }
 
         User user = (User) session.getAttribute("loggedInUser");
         if (user.getRole() != Role.DOCTOR) {
-            return new ModelAndView("redirect:/login"); // Restrict non-doctors
+            // Restrict non-doctors
+            return new ModelAndView("redirect:/login");
         }
 
         ModelAndView mav = new ModelAndView("doctor_home");
-        mav.addObject("user", user); // Send user details to view
+        // Send user details to view
+        mav.addObject("user", user);
         return mav;
     }
 

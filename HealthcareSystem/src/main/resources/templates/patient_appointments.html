@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="ISO-8859-1">
   <title>My Appointments</title>
@@ -8,18 +8,23 @@
 <body>
 <div class="container mt-5">
   <h1>My Appointments</h1>
+
   <table class="table">
     <thead>
     <tr>
-      <th>Doctor</th>
+      <th>Doctor Name</th>
+      <th>Doctor Email</th>
       <th>Date</th>
+      <th>Time Slot</th>
       <th>Status</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="appointment : ${appointments}">
+      <td th:text="${appointment.doctor.name}"></td>
       <td th:text="${appointment.doctor.email}"></td>
       <td th:text="${appointment.appointmentDate}"></td>
+      <td th:text="${appointment.timeSlot}"></td>
       <td th:text="${appointment.status}"></td>
     </tr>
     </tbody>

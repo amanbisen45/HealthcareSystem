@@ -1,19 +1,20 @@
 package com.anudip.HealthcareSystem.controller;
 
-import com.anudip.HealthcareSystem.model.Appointment;
-import com.anudip.HealthcareSystem.model.Role;
-import com.anudip.HealthcareSystem.model.Status;
-import com.anudip.HealthcareSystem.model.User;
+import com.anudip.HealthcareSystem.utility.TimeSlotUtil;
+import com.anudip.HealthcareSystem.model.*;
 import com.anudip.HealthcareSystem.service.AppointmentService;
 import com.anudip.HealthcareSystem.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -42,7 +43,7 @@ public class PatientController {
         return "patient_home";
     }
 
-    //Show book appointment form
+    // Show book appointment form
     @GetMapping("/patient/book-appointment")
     public String showBookAppointmentForm(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
@@ -55,43 +56,71 @@ public class PatientController {
             return "redirect:/login";
         }
 
-        model.addAttribute("doctors", userService.getAllDoctors());
+        List<Doctor> doctors = userService.getAllDoctors();
+        model.addAttribute("doctors", doctors);
+
+        List<LocalTime> availableSlots = TimeSlotUtil.getAvailableSlots();
+        model.addAttribute("timeSlots", availableSlots);
+
         return "book_appointment";
     }
 
-    // Handle appointment booking (Also Prevents Duplicate Booking)
+    // Handling appointment booking (Also Prevents Duplicate Booking)
     @PostMapping("/patient/book-appointment")
-    public String bookAppointment(@RequestParam("doctorId") Long doctorId, HttpServletRequest request, Model model) {
+    public String bookAppointment(@RequestParam("doctorId") Long doctorId,
+                                  @RequestParam("appointmentDate") String appointmentDateStr,
+                                  @RequestParam("timeSlot") String timeSlotStr,
+                                  HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loggedInUser") == null) {
             return "redirect:/login";
         }
 
         User patient = (User) session.getAttribute("loggedInUser");
-        User doctor = userService.getUserById(doctorId);
 
-        if (doctor == null || doctor.getRole() != Role.DOCTOR) {
-            return "redirect:/patient/book-appointment?error=InvalidDoctor";
-        }
-
-        // Checking if the patient already has an ACTIVE appointment with the same doctor
-        boolean exists = appointmentService.existsByPatientIdAndDoctorIdAndStatus(patient.getId(), doctorId);
-        if (exists) {
+        // Fetch doctor details
+        Doctor doctor = userService.getDoctorById(doctorId);
+        if (doctor == null || doctor.getUser().getRole() != Role.DOCTOR) {
+            model.addAttribute("error", "⚠️ Invalid doctor selection.");
             model.addAttribute("doctors", userService.getAllDoctors());
-            model.addAttribute("error", "You already have a pending or accepted appointment with this doctor.");
+            model.addAttribute("timeSlots", TimeSlotUtil.getAvailableSlots());
             return "book_appointment";
         }
 
-        //If no active appointment exists, proceed with booking
-        Appointment appointment = new Appointment();
-        appointment.setPatient(patient);
-        appointment.setDoctor(doctor);
-        appointment.setStatus(Status.PENDING);
-        appointment.setAppointmentDate(LocalDateTime.now());
+        try {
+            LocalDate appointmentDateOnly = LocalDate.parse(appointmentDateStr);
+            LocalTime timeSlot = LocalTime.parse(timeSlotStr);
+            LocalDateTime appointmentDateTime = appointmentDateOnly.atStartOfDay();
 
-        appointmentService.saveAppointment(appointment);
+            // Preventing double booking
+            if (appointmentService.isSlotBooked(doctorId, appointmentDateOnly.atStartOfDay(), timeSlot)) {
+                model.addAttribute("error", "⚠️ This time slot is already booked. Please choose another slot.");
+                model.addAttribute("doctors", userService.getAllDoctors());
+                model.addAttribute("timeSlots", TimeSlotUtil.getAvailableSlots());
+                return "book_appointment";
+            }
 
-        return "redirect:/patient/home?success=AppointmentBooked";
+            // Book the appointment
+            Appointment appointment = new Appointment();
+            appointment.setPatient(patient);
+            appointment.setDoctor(doctor.getUser());
+            appointment.setStatus(Status.PENDING);
+            appointment.setAppointmentDate(appointmentDateTime);
+            appointment.setTimeSlot(timeSlot);
+
+            appointmentService.saveAppointment(appointment);
+            return "redirect:/patient/home?success=AppointmentBooked";
+
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("error", "⚠️ Slot already booked. Please choose another time.");
+        } catch (Exception e) {
+            model.addAttribute("error", "⚠️ An unexpected error occurred: " + e.getMessage());
+        }
+
+        // Reload doctors and available slots
+        model.addAttribute("doctors", userService.getAllDoctors());
+        model.addAttribute("timeSlots", TimeSlotUtil.getAvailableSlots());
+        // Staying on the same page with an error
+        return "book_appointment";
     }
-
 }

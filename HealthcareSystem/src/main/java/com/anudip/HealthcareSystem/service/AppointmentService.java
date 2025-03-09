@@ -4,7 +4,10 @@ import com.anudip.HealthcareSystem.model.Appointment;
 import com.anudip.HealthcareSystem.model.Status;
 import com.anudip.HealthcareSystem.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -21,10 +24,30 @@ public class AppointmentService {
         return appointmentRepository.findByDoctorId(doctorId);
     }
 
-    public void bookAppointment(Appointment appointment) {
+    public boolean bookAppointment(Appointment appointment) {
+        boolean slotAlreadyBooked = isSlotBooked(
+                appointment.getDoctor().getId(),
+                appointment.getAppointmentDate(),
+                appointment.getTimeSlot()
+        );
+
+        if (slotAlreadyBooked) {
+            return false;
+        }
+
         appointment.setStatus(Status.PENDING);
-        appointmentRepository.save(appointment);
+
+        try {
+            appointmentRepository.save(appointment);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+
+            return false;
+        }
     }
+
+
+
 
     public Appointment getAppointmentById(Long id) {
         return appointmentRepository.findById(id).orElse(null);
@@ -38,10 +61,17 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
-    public boolean existsByPatientIdAndDoctorIdAndStatus(Long patientId, Long doctorId) {
-        return appointmentRepository.existsByPatientIdAndDoctorIdAndStatusIn(
-                patientId, doctorId, List.of(Status.PENDING, Status.APPROVED)
-        );
-
+    public boolean existsByDoctorIdAndTimeSlot(Long doctorId, LocalTime timeSlot) {
+        return appointmentRepository.existsByDoctorIdAndTimeSlotAndStatus(doctorId, timeSlot, Status.PENDING);
     }
+
+
+    public boolean isSlotBooked(Long doctorId, LocalDateTime appointmentDateTime, LocalTime timeSlot) {
+        return appointmentRepository.existsByDoctorIdAndAppointmentDateAndTimeSlot(
+                doctorId, appointmentDateTime, timeSlot
+        );
+    }
+
+
+
 }

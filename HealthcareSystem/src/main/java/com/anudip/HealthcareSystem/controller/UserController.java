@@ -14,20 +14,21 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Show Registration Page (LoginPage is handled by Login Controller)
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
-    //Registration Form Submission
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user, Model model) {
-        boolean isRegistered = userService.registerUser(user);
+    public String registerUser(@ModelAttribute User user,
+                               @RequestParam(required = false) String speciality,
+                               @RequestParam(required = false) Integer experience,
+                               Model model) {
+        boolean isRegistered = userService.registerUser(user, speciality, experience);
 
         if (isRegistered) {
-            return "redirect:/login"; // Redirect to login page after successful registration
+            return "redirect:/login";
         } else {
             model.addAttribute("error", "Email already exists!");
             return "register";

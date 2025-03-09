@@ -3,7 +3,6 @@ package com.anudip.HealthcareSystem.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
 import com.anudip.HealthcareSystem.model.User;
 import com.anudip.HealthcareSystem.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,8 @@ public class LoginController {
 
     @GetMapping("/")
     public String home() {
-        return "index"; // This looks for index.html inside src/main/resources/templates/
+        // This looks for index.html inside src/main/resources/templates/
+        return "index";
     }
 
 
@@ -40,7 +40,8 @@ public class LoginController {
 
         if (Objects.nonNull(oauthUser)) {
             HttpSession session = request.getSession();
-            session.setAttribute("loggedInUser", oauthUser);  // Store user in session
+            // Store user in session
+            session.setAttribute("loggedInUser", oauthUser);
 
             switch (oauthUser.getRole()) {
                 case PATIENT:
@@ -59,7 +60,8 @@ public class LoginController {
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.POST)
     public String logoutDo(HttpServletRequest request) {
-        request.getSession().invalidate();  // Destroy session on logout
+        // Destroy session on logout
+        request.getSession().invalidate();
         return "redirect:/login";
     }
 

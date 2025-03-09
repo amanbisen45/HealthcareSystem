@@ -38,13 +38,34 @@
         </div>
 
         <form th:action="@{/patient/book-appointment}" method="post">
+            <!-- Select Doctor -->
             <div class="mb-3">
                 <label for="doctor" class="form-label">👨‍⚕️ Select Doctor:</label>
-                <select name="doctorId" id="doctor" class="form-control">
-                    <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.email}"></option>
+                <select name="doctorId" id="doctor" class="form-control" required>
+                    <option value="">-- Select a Doctor --</option>
+                    <option th:each="doctor : ${doctors}"
+                            th:value="${doctor.id}"
+                            th:text="${doctor.user.name + ' (' + doctor.speciality + ', ' + doctor.experience + ' years)'}">
+                    </option>
                 </select>
             </div>
 
+            <!-- Select Appointment Date-->
+            <div class="mb-3">
+                <label for="appointmentDate" class="form-label">📅 Select Date:</label>
+                <input type="date" name="appointmentDate" id="appointmentDate" class="form-control" required>
+            </div>
+
+            <!-- Select Time Slot -->
+            <div class="mb-3">
+                <label for="timeSlot" class="form-label">⏰ Select Time Slot:</label>
+                <select name="timeSlot" id="timeSlot" class="form-control" required>
+                    <option value="">-- Select a Time Slot --</option>
+                    <option th:each="slot : ${timeSlots}" th:value="${slot}" th:text="${slot}"></option>
+                </select>
+            </div>
+
+            <!-- Buttons -->
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-custom">Book Appointment</button>
                 <a href="/patient/home" class="btn btn-secondary">Back to Dashboard</a>
