@@ -1,10 +1,12 @@
 package com.anudip.HealthcareSystem.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,11 +18,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // Default Constructor
-    public User() {
-    }
+    // One doctor can have many appointments (as doctor)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    private List<Appointment> doctorAppointments;
 
-    // Parameterized Constructor
+    // One patient can have many appointments (as patient)
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    private List<Appointment> patientAppointments;
+
+    // Constructors
+    public User() {}
+
     public User(Long id, String name, String email, String password, Role role) {
         this.id = id;
         this.name = name;
@@ -68,5 +76,34 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Appointment> getDoctorAppointments() {
+        return doctorAppointments;
+    }
+
+    public void setDoctorAppointments(List<Appointment> doctorAppointments) {
+        this.doctorAppointments = doctorAppointments;
+    }
+
+    public List<Appointment> getPatientAppointments() {
+        return patientAppointments;
+    }
+
+    public void setPatientAppointments(List<Appointment> patientAppointments) {
+        this.patientAppointments = patientAppointments;
+    }
+
+    // Helper Methods
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
+
+    public boolean isDoctor() {
+        return this.role == Role.DOCTOR;
+    }
+
+    public boolean isPatient() {
+        return this.role == Role.PATIENT;
     }
 }

@@ -1,10 +1,13 @@
 package com.anudip.HealthcareSystem.controller;
 
 import com.anudip.HealthcareSystem.model.Appointment;
+import com.anudip.HealthcareSystem.model.HealthRecord;
 import com.anudip.HealthcareSystem.model.Status;
 import com.anudip.HealthcareSystem.model.User;
 import com.anudip.HealthcareSystem.repository.AppointmentRepository;
 import com.anudip.HealthcareSystem.service.AdminService;
+import com.anudip.HealthcareSystem.service.HealthRecordService;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,38 @@ public class AdminController {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private HealthRecordService healthRecordService; // ✅ Injected for viewing records
+
+    // Admin Dashboard
+    @GetMapping("/dashboard")
+    public String adminDashboard(Model model, HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
+
+        List<User> users = adminService.getAllUsers();
+        List<Appointment> appointments = adminService.getAllAppointments();
+
+        model.addAttribute("users", users);
+        model.addAttribute("appointments", appointments);
+
+        return "admin_dashboard";
+    }
+
+    // ✅ View all health records
+    @GetMapping("/records")
+    public ModelAndView viewAllRecords(HttpSession session) {
+        User admin = (User) session.getAttribute("loggedInUser");
+        if (admin == null || !admin.isAdmin()) {
+            return new ModelAndView("error/unauthorized");
+        }
+
+        List<HealthRecord> records = healthRecordService.getAllRecords();
+        ModelAndView mav = new ModelAndView("admin_view_records");
+        mav.addObject("records", records);
+        return mav;
+    }
 
     // Get all users
     @GetMapping("/users")
@@ -31,15 +66,14 @@ public class AdminController {
         return adminService.getAllUsers();
     }
 
-    // Delete user and redirect to dashboard
+    // Delete user
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id) {
         adminService.deleteUser(id);
         return "redirect:/admin/dashboard";
     }
 
-
-    // Update user information
+    // Update user
     @PutMapping("/users/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return adminService.updateUser(id, user);
@@ -51,45 +85,20 @@ public class AdminController {
         return adminService.getAllAppointments();
     }
 
-
-    // Delete an appointment and redirect to dashboard
+    // Delete appointment
     @DeleteMapping("/appointments/{id}")
     public String deleteAppointment(@PathVariable Long id, Model model) {
         adminService.deleteAppointment(id);
         return "redirect:/admin/dashboard";
     }
 
-    //Update Status of =appointment
+    // Update appointment status
     @PutMapping("/appointments/{id}/status")
     public String updateAppointmentStatus(@PathVariable Long id, @RequestParam("status") String status) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
-
         appointment.setStatus(Status.valueOf(status));
         appointmentRepository.save(appointment);
-
         return "redirect:/admin/dashboard";
     }
-
-
-    //Admin Dashboard
-    @GetMapping("/dashboard")
-    public String adminDashboard(Model model, HttpSession session) {
-        // Check if user is logged in
-        if (session.getAttribute("loggedInUser") == null) {
-            return "redirect:/login";
-        }
-
-        // Fetch users and appointments
-        List<User> users = adminService.getAllUsers();
-        List<Appointment> appointments = adminService.getAllAppointments();
-
-        // Add data to model
-        model.addAttribute("users", users);
-        model.addAttribute("appointments", appointments);
-
-        return "admin_dashboard";
-    }
-
 }
-

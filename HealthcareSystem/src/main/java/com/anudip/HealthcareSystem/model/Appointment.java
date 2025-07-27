@@ -1,7 +1,6 @@
 package com.anudip.HealthcareSystem.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -10,21 +9,23 @@ import java.time.LocalTime;
         @UniqueConstraint(columnNames = {"doctor_id", "appointmentDate", "timeSlot"})
 })
 public class Appointment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private User patient;  // Patient who booked the appointment
+    // Many appointments can belong to one patient
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private User patient;
 
-    @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private User doctor;  // Doctor assigned to the appointment
+    // Many appointments can belong to one doctor
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private User doctor;
 
     @Column(nullable = false)
     private LocalTime timeSlot;
-
 
     private LocalDateTime appointmentDate;
 
@@ -41,23 +42,52 @@ public class Appointment {
         this.status = status;
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public User getPatient() { return patient; }
-    public void setPatient(User patient) { this.patient = patient; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public User getDoctor() { return doctor; }
-    public void setDoctor(User doctor) { this.doctor = doctor; }
+    public User getPatient() {
+        return patient;
+    }
 
-    public LocalDateTime getAppointmentDate() { return appointmentDate; }
-    public void setAppointmentDate(LocalDateTime appointmentDate) { this.appointmentDate = appointmentDate; }
+    public void setPatient(User patient) {
+        this.patient = patient;
+    }
 
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
+    public User getDoctor() {
+        return doctor;
+    }
 
-    public LocalTime getTimeSlot() { return timeSlot; }
-    public void setTimeSlot(LocalTime timeSlot) { this.timeSlot = timeSlot; }
+    public void setDoctor(User doctor) {
+        this.doctor = doctor;
+    }
+
+    public LocalTime getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(LocalTime timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    public LocalDateTime getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
-
