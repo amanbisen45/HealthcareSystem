@@ -43,6 +43,23 @@ public class PatientController {
         return "patient_home";
     }
 
+    // Patient Dashboard - UI Testing for Upload
+    @GetMapping("/patient/dashboard")
+    public String showDashboard(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
+
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user.getRole() != Role.PATIENT) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("user", user); // For future use in the template
+        return "patient_dashboard";
+    }
+
     // Show book appointment form
     @GetMapping("/patient/book-appointment")
     public String showBookAppointmentForm(HttpServletRequest request, Model model) {

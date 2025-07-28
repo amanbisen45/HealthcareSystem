@@ -17,6 +17,7 @@
         border-radius: 12px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         text-align: center;
+        margin-bottom: 40px;
     }
     .btn-custom {
         background-color: #0072ff;
@@ -28,12 +29,23 @@
     .btn-danger {
         background-color: #dc3545;
     }
+    table {
+        background-color: white;
+        color: black;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    th, td {
+        text-align: center;
+    }
   </style>
 </head>
 <body>
 
-<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-  <div class="card col-md-6">
+<div class="container mt-5">
+
+  <!-- Welcome Card -->
+  <div class="card col-md-6 mx-auto">
     <h1 class="mb-3">👨‍⚕️ Welcome, Doctor</h1>
     <p>You can manage your appointments and check patient details here.</p>
 
@@ -47,6 +59,28 @@
       <button type="submit" class="btn btn-danger">🚪 Logout</button>
     </form>
   </div>
+
+  <!-- Patients Table -->
+  <div class="card">
+    <h3 class="mb-3">🧑‍🤝‍🧑 My Patients</h3>
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Patient Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="patient : ${patients}">
+          <td th:text="${patient.name}">Patient Name</td>
+          <td>
+            <a th:href="@{'/doctor/view-records'(patientId=${patient.id})}" class="btn btn-sm btn-info">📁 View Records</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 </body>

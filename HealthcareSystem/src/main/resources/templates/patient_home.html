@@ -40,9 +40,22 @@
       <a href="/appointments" class="btn btn-primary">📅 View Appointments</a>
       <a href="/patient/book-appointment" class="btn btn-success">➕ Book Appointment</a>
       <a href="/profile" class="btn btn-secondary">👤 View Profile</a>
-      <a href="/#" class="btn btn-success">Back To Homepage</a>
+      <a href="/" class="btn btn-success">Back To Homepage</a>
     </div>
 
+    <!-- Upload Form -->
+    <form th:action="@{/api/health-records/upload}" method="post" enctype="multipart/form-data" class="mt-4">
+      <!-- Hidden field with logged-in user's email -->
+      <input type="hidden" name="userEmail" th:value="${loggedInUserEmail}" />
+
+      <div class="mb-3">
+        <label for="file" class="form-label"> Upload Healthcare Record: </label>
+        <input type="file" id="file" name="file" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-custom"> Upload File</button>
+    </form>
+
+    <!-- Logout -->
     <form th:action="@{/logout}" method="post" class="mt-4">
       <button type="submit" class="btn btn-danger">🚪 Logout</button>
     </form>
