@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <script>
+        function toggleDoctorFields() {
+            var role = document.getElementById("role").value;
+            var doctorFields = document.getElementById("doctorFields");
+
+            var specialityInput = document.getElementById("speciality");
+            var experienceInput = document.getElementById("experience");
+
+            if (role === "DOCTOR") {
+                doctorFields.style.display = "block";
+                specialityInput.setAttribute("required", "required");
+                experienceInput.setAttribute("required", "required");
+            } else {
+                doctorFields.style.display = "none";
+                specialityInput.removeAttribute("required");
+                experienceInput.removeAttribute("required");
+            }
+        }
+
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var toggleIcon = document.getElementById("togglePassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("bi-eye");
+                toggleIcon.classList.add("bi-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("bi-eye-slash");
+                toggleIcon.classList.add("bi-eye");
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-image: url('/images/Healthcare.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            transition: 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-container .toggle-icon {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4" style="width: 100%; max-width: 400px;">
+        <h3 class="text-center mb-3">Register</h3>
+
+        <!-- Error Message -->
+        <div th:if="${error}" class="alert alert-danger text-center">
+            <span th:text="${error}"></span>
+        </div>
+
+        <form action="/user/register" method="post" th:object="${user}">
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" th:field="*{name}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" th:field="*{email}" required>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3 password-container">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" th:field="*{password}" id="password" required>
+                <span class="toggle-icon bi bi-eye" id="togglePassword" onclick="togglePassword()"></span>
+            </div>
+
+            <!-- Role -->
+            <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select class="form-select" th:field="*{role}" id="role" onchange="toggleDoctorFields()" required>
+                    <option value="PATIENT">Patient</option>
+                    <option value="DOCTOR">Doctor</option>
+                </select>
+            </div>
+
+            <!-- Doctor Fields -->
+            <div id="doctorFields" style="display: none;">
+                <div class="mb-3">
+                    <label class="form-label">Speciality</label>
+                    <input type="text" class="form-control" name="speciality" id="speciality">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Experience (years)</label>
+                    <input type="number" class="form-control" name="experience" id="experience" min="1">
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-custom w-100">Register</button>
+        </form>
+
+        <!-- Login Link -->
+        <p class="text-center mt-3">Already have an account?
+            <a href="/login" class="text-primary">Login here</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

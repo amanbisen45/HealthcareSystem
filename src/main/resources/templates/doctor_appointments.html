@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Doctor's Appointments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Patient Appointments</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Patient Name</th>
+            <th>Patient Email</th>
+            <th>Date</th>
+            <th>Time Slot</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment : ${appointments}">
+            <td th:text="${appointment.patient.name}"></td>
+            <td th:text="${appointment.patient.email}"></td>
+            <td th:text="${appointment.appointmentDate}"></td>
+            <td th:text="${appointment.timeSlot}"></td>
+            <td th:text="${appointment.status}"></td>
+            <td>
+                <form th:action="@{/doctor/update-appointment}" method="post" th:if="${appointment.status.toString() == 'PENDING'}">
+                    <input type="hidden" name="appointmentId" th:value="${appointment.id}" />
+                    <button type="submit" name="status" value="ACCEPTED" class="btn btn-success btn-sm">Accept</button>
+                    <button type="submit" name="status" value="REJECTED" class="btn btn-danger btn-sm">Reject</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/doctor/home" class="btn btn-secondary">Back</a>
+</div>
+</body>
+</html>
