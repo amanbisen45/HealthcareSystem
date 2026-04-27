@@ -51,9 +51,7 @@ IV) How to Run:
 
 5) Open the project in your IDE (Eclipse or IntelliJ) and run the application
 
-V) Note:
-Make sure you do not upload your credentials.json file to GitHub. It's sensitive and must remain local and secure.
 
-VI) Project Contributors:
+V) Project Contributors:
 -Aman Bisen
 -Aditi Sandbhor
